@@ -21,15 +21,17 @@ from isolation import Board
 from sample_players import (RandomPlayer, open_move_score,
                             improved_score, center_score)
 from game_agent import (MinimaxPlayer, AlphaBetaPlayer, custom_score,
-                        custom_score_2, custom_score_3)
+                        custom_score_2, custom_score_3, custom_score_4, custom_score_5,custom_score_test)
 
-NUM_MATCHES = 5  # number of matches against each opponent
+NUM_MATCHES = 20  # number of matches against each opponent #default was 5
 TIME_LIMIT = 150  # number of milliseconds before timeout
 
 DESCRIPTION = """
-This script evaluates the performance of the custom_score evaluation function
-against the `ID_Improved` agent baseline. `ID_CustomScore` is an agent using
-Iterative Deepening and the custom_score function defined in game_agent.py.
+This script evaluates the performance of the custom_score evaluation
+function against a baseline agent using alpha-beta search and iterative
+deepening (ID) called `AB_Improved`. The three `AB_Custom` agents use
+ID and alpha-beta search with the custom_score functions defined in
+game_agent.py.
 """
 
 Agent = namedtuple("Agent", ["player", "name"])
@@ -129,10 +131,15 @@ def main():
     # Define two agents to compare -- these agents will play from the same
     # starting position against the same adversaries in the tournament
     test_agents = [
-        Agent(AlphaBetaPlayer(score_fn=improved_score), "AB_Improved"),
-        Agent(AlphaBetaPlayer(score_fn=custom_score), "AB_Custom"),
-        Agent(AlphaBetaPlayer(score_fn=custom_score_2), "AB_Custom_2"),
-        Agent(AlphaBetaPlayer(score_fn=custom_score_3), "AB_Custom_3")
+        Agent(RandomPlayer(), "Random"),
+        Agent(RandomPlayer(), "Random2"),
+        Agent(RandomPlayer(), "Random3"),
+#        Agent(AlphaBetaPlayer(score_fn=improved_score), "AB_Improved"),
+        Agent(AlphaBetaPlayer(score_fn=custom_score_test), "AB_Custom"),
+#        Agent(AlphaBetaPlayer(score_fn=custom_score_2), "AB_Custom_2"),
+#        Agent(AlphaBetaPlayer(score_fn=custom_score_3), "AB_Custom_3")
+#        Agent(AlphaBetaPlayer(score_fn=custom_score_4), "AB_Custom_4"),
+#        Agent(AlphaBetaPlayer(score_fn=custom_score_5), "AB_Custom_5")
     ]
 
     # Define a collection of agents to compete against the test agents
@@ -151,7 +158,48 @@ def main():
     print("{:^74}".format("Playing Matches"))
     print("{:^74}".format("*************************"))
     play_matches(cpu_agents, test_agents, NUM_MATCHES)
-
-
+#
+#def main(): #original
+#
+#    # Define two agents to compare -- these agents will play from the same
+#    # starting position against the same adversaries in the tournament
+#    test_agents = [
+#        Agent(AlphaBetaPlayer(score_fn=improved_score), "AB_Improved"),
+#        Agent(AlphaBetaPlayer(score_fn=custom_score), "AB_Custom"),
+#        Agent(AlphaBetaPlayer(score_fn=custom_score_2), "AB_Custom_2"),
+#        Agent(AlphaBetaPlayer(score_fn=custom_score_3), "AB_Custom_3")
+#    ]
+#
+#    # Define a collection of agents to compete against the test agents
+#    cpu_agents = [
+#        Agent(RandomPlayer(), "Random"),
+#        Agent(MinimaxPlayer(score_fn=open_move_score), "MM_Open"),
+#        Agent(MinimaxPlayer(score_fn=center_score), "MM_Center"),
+#        Agent(MinimaxPlayer(score_fn=improved_score), "MM_Improved"),
+#        Agent(AlphaBetaPlayer(score_fn=open_move_score), "AB_Open"),
+#        Agent(AlphaBetaPlayer(score_fn=center_score), "AB_Center"),
+#        Agent(AlphaBetaPlayer(score_fn=improved_score), "AB_Improved")
+#    ]
+#
+#    print(DESCRIPTION)
+#    print("{:^74}".format("*************************"))
+#    print("{:^74}".format("Playing Matches"))
+#    print("{:^74}".format("*************************"))
+#    play_matches(cpu_agents, test_agents, NUM_MATCHES)
+    
 if __name__ == "__main__":
     main()
+#    TORUNAMENT INFO
+#Chris Gearhart 
+#[38 minutes ago] 
+#It is always on a 7x7 board. The RAM is not externally limited, but I’ll have to put in a limit if things get way out of control (it hasn’t been an issue before). 
+#There are effective limits on RAM use because there is an import time limit on your agent, there is a size limit on the data file, and there is a constructor time limit. 
+#You can assume that consecutive calls to get_move() come from equivalent game states, but the object itself will never be the same; in fact, the object your agent will get 
+#is isolated from everything else in the tournament. It is a one-time-use instance that is created when get_move is called.
+#
+#Kamran Melikov [16 minutes ago] 
+#Thank you for clarification. I was thinking along the lines of preserving the search tree for next move. This will be probably unaffected by the factors you mention. 
+#It will use some of the move time though.
+
+
+## later ans - no, can't look ahead or save results.
